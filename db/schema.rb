@@ -10,49 +10,51 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_11_20_130350) do
+ActiveRecord::Schema.define(version: 2023_11_21_073138) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "companies", force: :cascade do |t|
+  create_table "companyys", force: :cascade do |t|
     t.string "name"
     t.integer "ntn"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "companys", force: :cascade do |t|
-    t.string "name"
-    t.integer "ntn"
-    t.bigint "item_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["item_id"], name: "index_companys_on_item_id"
   end
 
   create_table "discounts", force: :cascade do |t|
     t.integer "discount_percent"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "companyy_type", null: false
+    t.bigint "companyy_id", null: false
+    t.index ["companyy_type", "companyy_id"], name: "index_discounts_on_companyy"
   end
 
   create_table "invoices", force: :cascade do |t|
-    t.bigint "company_id"
     t.integer "total_items"
     t.integer "total_price"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["company_id"], name: "index_invoices_on_company_id"
+    t.bigint "companyy_id", null: false
+    t.string "itemsPoly_type", null: false
+    t.bigint "itemsPoly_id", null: false
+    t.string "discountPoly_type", null: false
+    t.bigint "discountPoly_id", null: false
+    t.index ["companyy_id"], name: "index_invoices_on_companyy_id"
+    t.index ["discountPoly_type", "discountPoly_id"], name: "index_invoices_on_discountPoly"
+    t.index ["itemsPoly_type", "itemsPoly_id"], name: "index_invoices_on_itemsPoly"
   end
 
   create_table "items", force: :cascade do |t|
-    t.bigint "company_id"
     t.string "name"
     t.integer "price"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["company_id"], name: "index_items_on_company_id"
+    t.string "companyy_type", null: false
+    t.bigint "companyy_id", null: false
+    t.index ["companyy_type", "companyy_id"], name: "index_items_on_companyy"
   end
 
+  add_foreign_key "invoices", "companyys"
 end
